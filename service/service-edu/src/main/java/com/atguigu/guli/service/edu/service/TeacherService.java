@@ -1,9 +1,12 @@
 package com.atguigu.guli.service.edu.service;
 
 import com.atguigu.guli.service.edu.entity.Teacher;
-import com.atguigu.guli.service.edu.query.TeacherQuery;
+import com.atguigu.guli.service.edu.entity.query.TeacherQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -15,4 +18,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface TeacherService extends IService<Teacher> {
     Page<Teacher> selectPage(Page<Teacher> pageParam, TeacherQuery teacherQuery);
+
+    List<Map<String, Object>> selectNameListByKey(String key);
+
+    boolean removeAvatarById(String id);
 }

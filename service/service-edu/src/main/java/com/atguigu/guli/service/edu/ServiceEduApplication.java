@@ -2,6 +2,8 @@ package com.atguigu.guli.service.edu;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -9,6 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
  * @author: bailiang
  * @create: 2020-09-20 14:59
  */
+@EnableFeignClients
+@EnableDiscoveryClient
 @SpringBootApplication
 @ComponentScan({"com.atguigu.guli"})    //不设置的话，只扫描该微服务edu下的包，不会扫描到其他包的MybatisPlusConfig
 public class ServiceEduApplication{

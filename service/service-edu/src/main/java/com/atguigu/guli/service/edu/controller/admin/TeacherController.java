@@ -2,15 +2,19 @@ package com.atguigu.guli.service.edu.controller.admin;
 
 import com.atguigu.guli.service.base.result.Result;
 import com.atguigu.guli.service.edu.entity.Teacher;
-import com.atguigu.guli.service.edu.query.TeacherQuery;
+import com.atguigu.guli.service.edu.feign.OssFileService;
+import com.atguigu.guli.service.edu.entity.query.TeacherQuery;
 import com.atguigu.guli.service.edu.service.TeacherService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -20,11 +24,24 @@ import java.util.List;
  * @author Bailiang
  * @since 2020-09-19
  */
+@CrossOrigin()  //开启跨域访问
+@Api(tags = "讲师管理")
 @RestController
 @RequestMapping("/admin/edu/teacher")
+@Slf4j
 public class TeacherController {
     @Autowired
     private TeacherService teacherService;
+
+    @Autowired
+    private OssFileService ossFileService;
+
+    @DeleteMapping("/test")
+    public Result removeFile(@RequestBody String url){
+        ossFileService.removeFile(url);
+        return Result.ok();
+    };
+
 
     @ApiOperation("所有讲师列表")
     @GetMapping("/list")
@@ -65,11 +82,18 @@ public class TeacherController {
         }
     }
 
-    @ApiOperation(value = "根据id删除讲师", notes = "逻辑删除讲师数据")
+    @ApiOperation(value = "根据id删除讲师", notes = "逻辑删除讲师数据，包括讲师头像")
     @DeleteMapping("remove/{id}")
     public Result removeById(
             @ApiParam(value = "讲师id", required = true)
             @PathVariable String id){
+        //删除头像
+        boolean isDeleteAvatar = teacherService.removeAvatarById(id);
+        if(!isDeleteAvatar){
+            log.warn("删除讲师头像失败，讲师id：" + id);
+        }
+
+        //删除数据
         boolean b = teacherService.removeById(id);
         if(b){
             return Result.ok().message("删除成功");
@@ -115,14 +139,36 @@ public class TeacherController {
     @PutMapping("update")
     public Result updateById(
             @ApiParam(value = "讲师对象", required = true)
-            @RequestBody Teacher teacher
-    ){
+            @RequestBody Teacher teacher){
         boolean b = teacherService.updateById(teacher);
         if(b){
             return Result.ok().message("数据修改成功");
         }else{
             return Result.error().message("数据修改失败");
         }
+    }
+
+    @ApiOperation("根据id列表删除讲师")
+    @DeleteMapping("batch-remove")
+    public Result removeRows(
+            @ApiParam(value = "讲师id列表", required = true)
+            @RequestBody List<String> idList){
+        boolean result = teacherService.removeByIds(idList);
+        if(result){
+            return Result.ok().message("删除成功");
+        }else {
+            return Result.error().message("数据不存在");
+        }
+
+    }
+
+    @ApiOperation(value = "根据关键字查询讲师姓名列表")
+    @GetMapping("list/name")
+    public Result selectNameListByKey(
+            @ApiParam(value = "查询关键字", required = false)
+            @RequestParam(required = false) String key){
+        List<Map<String, Object>> nameList = teacherService.selectNameListByKey(key);
+        return Result.ok().data("nameList", nameList);
     }
 }
 

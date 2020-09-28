@@ -1,0 +1,20 @@
+server:
+  port: 8120
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: service-oss
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # nacos服务地址
+
+aliyun:
+  oss:
+    endpoint: oss-cn-shanghai.aliyuncs.com
+    accessKeyId: LTAI4GE4daymd2nHtBSTaxF8
+    accessKeySecret: 3NKkXD5htjhrZc6XIkJvi5RMLigBOw
+    #bucket可以在控制台创建，也可以使用java代码创建，注意先测试bucket是否已被占用
+    bucketName: guliyunclass-file-01

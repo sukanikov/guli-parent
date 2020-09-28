@@ -1,6 +1,5 @@
 package com.atguigu.guli.service.base.result;
 
-import com.baomidou.mybatisplus.extension.api.R;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -47,14 +46,21 @@ public class Result{
         return result;
     }
 
+    /**
+     * 外部传入的枚举，更灵活的定义内容
+     * @param resultCodeEnum
+     * @return
+     */
     public static Result setResult(ResultCodeEnum resultCodeEnum){
         Result result = new Result();
-        result.setSuccess(resultCodeEnum.getSuccess());
-        result.setCode(resultCodeEnum.getCode());
-        result.setMessage(resultCodeEnum.getMessage());
+        result.setSuccess(resultCodeEnum.getSuccess())
+                .setCode(resultCodeEnum.getCode())
+                .setMessage(resultCodeEnum.getMessage());
         return result;
     }
 
+
+    //以下方法是单独的赋值，也是为了灵活运用
     public Result success(Boolean success){
         this.setSuccess(success);
         return this;

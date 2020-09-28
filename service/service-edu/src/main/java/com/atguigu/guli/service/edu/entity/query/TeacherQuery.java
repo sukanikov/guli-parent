@@ -1,4 +1,4 @@
-package com.atguigu.guli.service.edu.query;
+package com.atguigu.guli.service.edu.entity.query;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
