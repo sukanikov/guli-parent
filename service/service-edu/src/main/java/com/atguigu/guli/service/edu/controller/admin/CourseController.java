@@ -4,6 +4,7 @@ package com.atguigu.guli.service.edu.controller.admin;
 import com.atguigu.guli.service.base.result.Result;
 import com.atguigu.guli.service.edu.entity.form.CourseInfoForm;
 import com.atguigu.guli.service.edu.entity.query.CourseQuery;
+import com.atguigu.guli.service.edu.entity.vo.CoursePublishVo;
 import com.atguigu.guli.service.edu.entity.vo.CourseVo;
 import com.atguigu.guli.service.edu.service.CourseService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -57,7 +58,7 @@ public class CourseController {
     }
 
     @ApiOperation("更新课程基本信息")
-    @PutMapping("update-course-info")
+    @PutMapping("/update-course-info")
     public Result updateCourseInfo(
             @ApiParam(value ="课程基本信息", required = true)
             @RequestBody CourseInfoForm courseInfoForm){
@@ -67,7 +68,7 @@ public class CourseController {
     }
 
     @ApiOperation("分页课程列表")
-    @GetMapping("list/{page}/{limit}")
+    @GetMapping("/list/{page}/{limit}")
     public Result list(
             @ApiParam(value ="当前页码", required = true)
             @PathVariable Long page,
@@ -78,6 +79,52 @@ public class CourseController {
 
         Page<CourseVo> pageModel = courseService.selectPage(page, limit, courseQuery);
         return Result.ok().data("total", pageModel.getTotal()).data("rows", pageModel.getRecords());
+    }
+
+    @ApiOperation("根据id删除课程")
+    @DeleteMapping("/remove/{id}")
+    public Result removeById(@ApiParam(value = "课程id", required = true)
+                             @PathVariable String id){
+        //封面删除：oss
+        boolean result = courseService.removeCoverById(id);
+        if(!result){
+            log.warn("课程封面删除失败，课程id：" + id);
+        }
+        //视频删除 TODO
+
+        //课程删除
+        boolean result2 = courseService.removeCourseById(id);
+        if(result2){
+            return Result.ok().message("删除成功");
+        }else {
+            return Result.error().message("删除失败");
+        }
+    }
+
+    @ApiOperation("根据id获取课程发布信息")
+    @GetMapping("/course-publish/{id}")
+    public Result getCoursePublishVoById(@ApiParam(value = "课程id", required = true)
+                                       @PathVariable String id){
+        CoursePublishVo coursePublishVo = courseService.getCoursePublishByVoId(id);
+
+        if(null != coursePublishVo){
+            return Result.ok().data("item", coursePublishVo);
+        }else {
+            return Result.error().message("数据不存在");
+        }
+    }
+
+    @ApiOperation("根据id发布课程")
+    @PutMapping("/publish-course/{id}")
+    public Result publishCourseById(@ApiParam(value = "课程id", required = true)
+                                    @PathVariable String id){
+        boolean result = courseService.publishCourseById(id);
+
+        if(result){
+            return Result.ok().message("发布成功");
+        }else {
+            return Result.error().message("数据不存在");
+        }
     }
 }
 

@@ -1,8 +1,10 @@
 package com.atguigu.guli.service.edu.service.impl;
 
 import com.atguigu.guli.service.base.result.Result;
+import com.atguigu.guli.service.edu.entity.Course;
 import com.atguigu.guli.service.edu.entity.Teacher;
 import com.atguigu.guli.service.edu.feign.OssFileService;
+import com.atguigu.guli.service.edu.mapper.CourseMapper;
 import com.atguigu.guli.service.edu.mapper.TeacherMapper;
 import com.atguigu.guli.service.edu.entity.query.TeacherQuery;
 import com.atguigu.guli.service.edu.service.TeacherService;
@@ -13,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +32,9 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
 
     @Autowired
     private OssFileService ossFileService;
+
+    @Autowired
+    private CourseMapper courseMapper;
 
     @Override
     public Page<Teacher> selectPage(Page<Teacher> pageParam, TeacherQuery teacherQuery){
@@ -87,5 +93,20 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         }
 
         return false;
+    }
+
+    @Override
+    public Map<String, Object> selectTeacherInfoById(String id){
+        Map<String, Object> map = new HashMap();
+        QueryWrapper<Course> wrapper = new QueryWrapper<>();
+
+        Teacher teacher = baseMapper.selectById(id);
+        wrapper.eq("teacher_id", id);
+        List<Course> courseList = courseMapper.selectList(wrapper);
+
+        map.put("teacher", teacher);
+        map.put("courseList", courseList);
+
+        return map;
     }
 }

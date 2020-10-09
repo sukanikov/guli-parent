@@ -14,7 +14,7 @@ spring:
 aliyun:
   oss:
     endpoint: oss-cn-shanghai.aliyuncs.com
-    accessKeyId: LTAI4GE4daymd2nHtBSTaxF8
-    accessKeySecret: 3NKkXD5htjhrZc6XIkJvi5RMLigBOw
+    accessKeyId: LTAI4G3xpa14HGX5jS3dy5QD
+    accessKeySecret: 0Md4fFv5MY0UPgbyKAwYTa1v5xMuPV
     #bucket可以在控制台创建，也可以使用java代码创建，注意先测试bucket是否已被占用
     bucketName: guliyunclass-file-01
