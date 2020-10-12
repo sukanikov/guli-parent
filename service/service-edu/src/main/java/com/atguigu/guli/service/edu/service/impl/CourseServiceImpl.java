@@ -4,8 +4,10 @@ import com.atguigu.guli.service.base.result.Result;
 import com.atguigu.guli.service.edu.entity.*;
 import com.atguigu.guli.service.edu.entity.form.CourseInfoForm;
 import com.atguigu.guli.service.edu.entity.query.CourseQuery;
+import com.atguigu.guli.service.edu.entity.query.WebCourseQuery;
 import com.atguigu.guli.service.edu.entity.vo.CoursePublishVo;
 import com.atguigu.guli.service.edu.entity.vo.CourseVo;
+import com.atguigu.guli.service.edu.entity.vo.WebCourseVo;
 import com.atguigu.guli.service.edu.feign.OssFileService;
 import com.atguigu.guli.service.edu.mapper.*;
 import com.atguigu.guli.service.edu.service.CourseService;
@@ -206,5 +208,51 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         course.setPublishTime(new Date());
         course.setStatus(Course.COURSE_NORMAL);
         return this.updateById(course);
+    }
+
+    @Override
+    public List<Course> webSelectList(WebCourseQuery webCourseQuery){
+        //只有课程“已发布”，才能显示
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", Course.COURSE_NORMAL);
+
+        String subjectParentId = webCourseQuery.getSubjectParentId();
+        String subjectId = webCourseQuery.getSubjectId();
+        String buyCountSort = webCourseQuery.getBuyCountSort();
+        String publishTimeSort = webCourseQuery.getPublishTimeSort();
+        String priceSort = webCourseQuery.getPriceSort();
+
+        if(!StringUtils.isEmpty(subjectParentId)){
+            queryWrapper.eq("subject_parent_id", subjectParentId);
+        }
+
+        if(!StringUtils.isEmpty(subjectId)){
+            queryWrapper.eq("subject_id", subjectId);
+        }
+
+        if(!StringUtils.isEmpty(buyCountSort)){
+            queryWrapper.orderByDesc("buy_count");
+        }
+
+        if(!StringUtils.isEmpty(publishTimeSort)){
+            queryWrapper.orderByDesc("publish_time");
+        }
+
+        if(!StringUtils.isEmpty(priceSort)){
+            if("1".equals(priceSort)){
+                queryWrapper.orderByAsc("price");
+            }else{
+                queryWrapper.orderByDesc("price");
+            }
+        }
+
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public WebCourseVo selectWebCourseVoById(String id){
+        baseMapper.updateViewCountById(id);
+
+        return baseMapper.selectWebCourseVoById(id);
     }
 }

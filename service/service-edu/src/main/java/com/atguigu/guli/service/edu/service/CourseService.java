@@ -3,10 +3,14 @@ package com.atguigu.guli.service.edu.service;
 import com.atguigu.guli.service.edu.entity.Course;
 import com.atguigu.guli.service.edu.entity.form.CourseInfoForm;
 import com.atguigu.guli.service.edu.entity.query.CourseQuery;
+import com.atguigu.guli.service.edu.entity.query.WebCourseQuery;
 import com.atguigu.guli.service.edu.entity.vo.CoursePublishVo;
 import com.atguigu.guli.service.edu.entity.vo.CourseVo;
+import com.atguigu.guli.service.edu.entity.vo.WebCourseVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -33,4 +37,8 @@ public interface CourseService extends IService<Course> {
     CoursePublishVo getCoursePublishByVoId(String id);
 
     boolean publishCourseById(String id);
+
+    List<Course> webSelectList(WebCourseQuery webCourseQuery);
+
+    WebCourseVo selectWebCourseVoById(String id);
 }
