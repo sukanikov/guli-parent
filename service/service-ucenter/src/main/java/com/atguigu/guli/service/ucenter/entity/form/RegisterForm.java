@@ -1,0 +1,23 @@
+package com.atguigu.guli.service.ucenter.entity.form;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+/**
+ * @program: guli-parent
+ * @author: bailiang
+ * @create: 2020-10-13 19:24
+ */
+@Data
+@ApiModel("用户注册对象")
+public class RegisterForm {
+    @ApiModelProperty(value = "昵称")
+    private String nickname;
+    @ApiModelProperty(value = "电话号码")
+    private String mobile;
+    @ApiModelProperty(value = "密码")
+    private String password;
+    @ApiModelProperty(value = "验证码")
+    private String code;
+}

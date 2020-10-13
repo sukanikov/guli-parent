@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("cms_ad")
-public class Ad extends BaseEntity /*implements Serializable */{
+public class Ad extends BaseEntity /*implements Serializable jdk序列化，可读性差，现一般推荐json序列化 */ {
 
     private static final long serialVersionUID=1L;
 
